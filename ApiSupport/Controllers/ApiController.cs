@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ApiSupport.Data;
+using ApiSupport.Services;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using TAM.LogisticSystem.Services;
@@ -15,6 +16,11 @@ namespace ApiSupport.Controllers
     [ApiController]
     public class ApiController : Controller
     {
+        private readonly GetDataService getDataService;
+        public ApiController(GetDataService getData)
+        {
+            this.getDataService = getData;
+        }
 
         // GET api/values/5
         [HttpGet("number-string/{param}")]
@@ -29,6 +35,13 @@ namespace ApiSupport.Controllers
         {
             var result = JsonConvert.SerializeObject(Profiles.Bio, Formatting.Indented);
             return Ok(result); 
+        }
+
+        [HttpGet("get-benefit")]
+        public ActionResult GetBenefit()
+        {
+            var result = JsonConvert.SerializeObject(getDataService.GetBenefits().GetAwaiter().GetResult(), Formatting.Indented);
+            return Ok(result);
         }
     }
 }
